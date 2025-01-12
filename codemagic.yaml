@@ -5,13 +5,13 @@ workflows:
     environment:
       flutter: stable
       vars:
-        TOKEN: $TOKEN
+        TOKEN: $TOKEN # Esta variable se usa en producción
     scripts:
       - name: Install dependencies
         script: |
           flutter packages get
       - name: Build Flutter web
         script: |
-          flutter build web
+          flutter build web --dart-define=TOKEN=$TOKEN
     artifacts:
       - build/web
