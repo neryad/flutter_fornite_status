@@ -1,0 +1,17 @@
+workflows:
+  flutter-web-deploy:
+    name: Flutter Web Deploy
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      vars:
+        TOKEN: $TOKEN
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter packages get
+      - name: Build Flutter web
+        script: |
+          flutter build web
+    artifacts:
+      - build/web
