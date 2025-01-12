@@ -507,8 +507,7 @@ class _StatsScreenState extends State<StatsScreen> {
     final url = 'https://fortnite-api.com/v2/stats/br/v2?name=$username';
 
     // String envValue = dotenv.env['TOKEN'] ?? 'default_value';
-    String envValue = String.fromEnvironment('TOKEN',
-        defaultValue: dotenv.env['TOKEN'] ?? 'default_value');
+    String envValue = dotenv.env['TOKEN'] ?? 'default_value';
 
     try {
       final response = await dio.get(url,
