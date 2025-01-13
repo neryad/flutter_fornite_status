@@ -1,0 +1,84 @@
+// class ShopScreen extends StatefulWidget {
+//   @override
+//   _ShopScreenState createState() => _ShopScreenState();
+// }
+
+// class _ShopScreenState extends State<ShopScreen> {
+//   late Future<Main> futureShop;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     futureShop = fetchShopData();
+//   }
+
+//   Future<Main> fetchShopData() async {
+//     final dio = Dio();
+//     final url = 'https://fortnite-api.com/v2/shop';
+
+//     try {
+//       final response = await dio.get(url);
+
+//       return Main.fromJson(response.data);
+//     } catch (e) {
+//       throw Exception('Failed to load shop data: $e');
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: FutureBuilder<Main>(
+//         future: futureShop,
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return Center(child: CircularProgressIndicator());
+//           } else if (snapshot.hasError) {
+//             return Center(child: Text("Error: ${snapshot.error}"));
+//           } else if (!snapshot.hasData || snapshot.data == null) {
+//             return Center(child: Text("No data available"));
+//           } else {
+//             return ShopPage(shopData: snapshot.data!);
+//           }
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// class ShopPage extends StatelessWidget {
+//   final Main shopData;
+
+//   const ShopPage({Key? key, required this.shopData}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final items = shopData.data?.entries ?? [];
+
+//     if (items.isEmpty) {
+//       return Center(child: Text("No items available"));
+//     }
+
+//     return ListView.builder(
+//       itemCount: items.length,
+//       itemBuilder: (context, index) {
+//         final item = items[index];
+//         return Card(
+//           elevation: 4,
+//           margin: EdgeInsets.all(8.0),
+//           child: ListTile(
+//             leading: item.brItems?.isNotEmpty == true &&
+//                     item.brItems![0].images?.icon != null
+//                 ? Image.network(item.brItems![0].images!.icon!)
+//                 : null,
+//             title: Text(item.devName ?? 'Unknown'),
+//             subtitle: Text(item.brItems?.isNotEmpty == true
+//                 ? item.brItems![0].description ?? 'No description available'
+//                 : 'No description available'),
+//             trailing: Text('${item.finalPrice ?? 'N/A'} V-Bucks'),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }

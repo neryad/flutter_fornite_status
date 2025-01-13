@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_fornite_status/map.dart';
+import 'package:flutter_fornite_status/models/shop_model.dart';
+import 'package:flutter_fornite_status/test.dart';
 
 class FortniteStatsApp extends StatelessWidget {
   @override
@@ -19,7 +22,53 @@ class FortniteStatsApp extends StatelessWidget {
               TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      home: StatsScreen(),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static List<Widget> _widgetOptions = <Widget>[
+    StatsScreen(),
+    //MyWidget(),
+    MapScreen()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Fortnite Stats Viewer'),
+      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Stats',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shop),
+            label: 'Shop',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
@@ -43,9 +92,7 @@ class _StatsScreenState extends State<StatsScreen> {
     final dio = Dio();
     final url = 'https://fortnite-api.com/v2/stats/br/v2?name=$username';
 
-    //String envValue = dotenv.env['TOKEN'] ?? 'default_value';
-    String envValue =
-        const String.fromEnvironment('TOKEN', defaultValue: 'default_value');
+    String envValue = dotenv.env['TOKEN'] ?? 'default_value';
 
     try {
       final response = await dio.get(url,
@@ -66,7 +113,6 @@ class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Fortnite Stats Viewer")),
       body: Column(
         children: [
           Padding(
@@ -146,14 +192,20 @@ class StatsPage extends StatelessWidget {
                           _buildOverallStatsCard(overallStats),
                         ],
                       ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 16),
+                    _buildModeStatsCard("Solo Stats", soloStats),
+                    SizedBox(height: 16),
+                    _buildModeStatsCard("Duo Stats", duoStats),
+                    SizedBox(height: 16),
+                    _buildModeStatsCard("Squad Stats", squadStats),
+                  ],
+                ),
                 SizedBox(height: 16),
                 _buildPieChart(stats['data']['stats']['all']),
-                SizedBox(height: 16),
-                _buildModeStatsCard("Solo Stats", soloStats),
-                SizedBox(height: 16),
-                _buildModeStatsCard("Duo Stats", duoStats),
-                SizedBox(height: 16),
-                _buildModeStatsCard("Squad Stats", squadStats),
               ],
             ),
           ),
